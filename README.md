@@ -12,6 +12,15 @@ As a result, workers may not be as stable and crash resistant.
 Further, since Windows does not support SIGALRM, WindowsWorkers
 do not provide any of the work timeout controls that normal workers provide.
 
+Installation and Use
+-----------
+
+You can install this package directly from GitHub with pip:
+
+```bash
+$ pip -e git+https://github.com/michaelbrooks/rq-win.git#egg=rq-win
+```
+
 To start an RQ worker using the WindowsWorker class:
 
 ```bash
