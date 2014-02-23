@@ -79,7 +79,7 @@ class WindowsWorker(rq.Worker):
 
         except:
             # Use the public setter here, to immediately update Redis
-            job.status = rq.job.FAILED
+            job.status = rq.job.Status.FAILED
             self.handle_exception(job, *sys.exc_info())
             return False
 
