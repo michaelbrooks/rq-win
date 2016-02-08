@@ -25,7 +25,7 @@ setup(
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
         ],
-    requires=[
-        "rq (>=0.3.4)"
+    install_requires=[
+        "rq>=0.3.4", "times"
     ]
 )
