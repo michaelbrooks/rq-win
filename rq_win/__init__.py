@@ -1,3 +1,3 @@
-from worker import WindowsWorker
+from .worker import WindowsWorker
 
 __all__ = ['WindowsWorker']

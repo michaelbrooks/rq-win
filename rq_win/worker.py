@@ -19,6 +19,15 @@ class WindowsWorker(rq.Worker):
     due to not using fork().
     """
 
+    def __init__(self, *args, **kwargs):
+        if kwargs.get('default_worker_ttl', None) is None:
+            # Force a small worker_ttl,
+            # Otherwise the process seems to hang somewhere within connection.lpop and
+            # you can't kill the worker with Ctrl+C until the timeout expires (Ctrl+Break works, though).
+            # The default timeout is 420, however, which is too long.
+            kwargs['default_worker_ttl'] = 2
+        super(WindowsWorker, self).__init__(*args, **kwargs)
+
     def work(self, burst=False):
         """Starts the work loop.
 
@@ -29,10 +38,11 @@ class WindowsWorker(rq.Worker):
         The return value indicates whether any jobs were processed.
         """
         self.log.info('Using rq_win.WindowsWorker (experimental)')
+        self.default_worker_ttl=2
         return super(WindowsWorker, self).work(burst)
 
 
-    def fork_and_perform_job(self, job):
+    def execute_job(self, job):
         """Spawns a work horse to perform the actual work and passes it a job.
         The worker will wait for the work horse and make sure it executes
         within the given timeout bounds, or will end the work horse with
@@ -67,7 +77,7 @@ class WindowsWorker(rq.Worker):
             # Pickle the result in the same try-except block since we need to
             # use the same exc handling when pickling fails
             job._result = rv
-            job._status = rq.job.Status.FINISHED
+            job._status = rq.job.JobStatus.FINISHED
             job.ended_at = times.now()
 
             result_ttl = job.get_ttl(self.default_result_ttl)
@@ -79,7 +89,7 @@ class WindowsWorker(rq.Worker):
 
         except:
             # Use the public setter here, to immediately update Redis
-            job.status = rq.job.Status.FAILED
+            job.status = rq.job.JobStatus.FAILED
             self.handle_exception(job, *sys.exc_info())
             return False
 

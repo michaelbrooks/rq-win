@@ -11,7 +11,7 @@ def read(fname):
 
 setup(
     name="rq-win",
-    version="0.0.1",
+    version="0.3.13",
     author="Michael Brooks",
     author_email="mjbrooks@uw.edu",
     description=("RQ Worker class that works for development on Windows"),
@@ -25,7 +25,7 @@ setup(
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
         ],
-    requires=[
-        "rq (>=0.3.4)"
+    install_requires=[
+        "rq>=0.3.13", "times"
     ]
 )

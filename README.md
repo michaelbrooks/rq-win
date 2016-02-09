@@ -18,13 +18,13 @@ Installation and Use
 You can install this package directly from GitHub with pip:
 
 ```bash
-$ pip -e git+https://github.com/michaelbrooks/rq-win.git#egg=rq-win
+$ pip install git+https://github.com/michaelbrooks/rq-win.git#egg=rq-win
 ```
 
 To start an RQ worker using the WindowsWorker class:
 
 ```bash
-$ rqworker -w 'rq_win.WindowsWorker'
+$ rqworker -w rq_win.WindowsWorker
 ```
 
 Contributions and improvements are welcome!
