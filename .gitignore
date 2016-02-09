@@ -39,9 +39,5 @@ nosetests.xml
 /venv
 
 # IntelliJ IDEA project files
-/.idea/workspace.xml
-/.idea/tasks.xml
-/.idea/dataSources.xml
-/.idea/sqlDataSources.xml
-/.idea/dynamic.xml
-/.idea/dataSources.ids
+/.idea/
+*.iml
