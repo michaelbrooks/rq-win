@@ -42,15 +42,15 @@ class WindowsWorker(rq.Worker):
         return super(WindowsWorker, self).work(burst)
 
 
-    def execute_job(self, job):
+    def execute_job(self, job, queue):
         """Spawns a work horse to perform the actual work and passes it a job.
         The worker will wait for the work horse and make sure it executes
         within the given timeout bounds, or will end the work horse with
         SIGALRM.
         """
-        self.main_work_horse(job)
+        self.main_work_horse(job, queue)
 
-    def main_work_horse(self, job):
+    def main_work_horse(self, job, queue):
         """This is the entry point of the newly spawned work horse."""
         # After fork()'ing, always assure we are generating random sequences
         # that are different from the worker.
@@ -58,11 +58,11 @@ class WindowsWorker(rq.Worker):
 
         self._is_horse = True
 
-        success = self.perform_job(job)
+        success = self.perform_job(job, queue)
 
         self._is_horse = False
 
-    def perform_job(self, job):
+    def perform_job(self, job, queue):
         """Performs the actual work of a job.  Will/should only be called
         inside the work horse's process.
         """
@@ -84,6 +84,7 @@ class WindowsWorker(rq.Worker):
             pipeline = self.connection._pipeline()
             if result_ttl != 0:
                 job.save(pipeline=pipeline)
+            queue.enqueue_dependents(job, pipeline=pipeline)
             job.cleanup(result_ttl, pipeline=pipeline)
             pipeline.execute()
 
