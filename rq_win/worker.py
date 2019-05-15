@@ -8,6 +8,8 @@ import rq.job
 import rq.compat
 import rq.worker
 
+from rq.defaults import (DEFAULT_LOGGING_FORMAT, DEFAULT_LOGGING_DATE_FORMAT)
+
 
 class WindowsWorker(rq.Worker):
     """
@@ -28,7 +30,8 @@ class WindowsWorker(rq.Worker):
             kwargs['default_worker_ttl'] = 2
         super(WindowsWorker, self).__init__(*args, **kwargs)
 
-    def work(self, burst=False):
+    def work(self, burst=False, logging_level="INFO", date_format=DEFAULT_LOGGING_DATE_FORMAT,
+             log_format=DEFAULT_LOGGING_FORMAT):
         """Starts the work loop.
 
         Pops and performs all jobs on the current list of queues.  When all
@@ -80,13 +83,24 @@ class WindowsWorker(rq.Worker):
             job._status = rq.job.JobStatus.FINISHED
             job.ended_at = times.now()
 
-            result_ttl = job.get_ttl(self.default_result_ttl)
-            pipeline = self.connection._pipeline()
-            if result_ttl != 0:
-                job.save(pipeline=pipeline)
-            queue.enqueue_dependents(job, pipeline=pipeline)
-            job.cleanup(result_ttl, pipeline=pipeline)
-            pipeline.execute()
+            #
+            # Using the code from Worker.handle_job_success
+            #
+            with self.connection.pipeline() as pipeline:
+                pipeline.watch(job.dependents_key)
+                queue.enqueue_dependents(job, pipeline=pipeline)
+
+                self.set_current_job_id(None, pipeline=pipeline)
+                self.increment_successful_job_count(pipeline=pipeline)
+
+                result_ttl = job.get_result_ttl(self.default_result_ttl)
+                if result_ttl != 0:
+                    job.save(pipeline=pipeline, include_meta=False)
+
+                job.cleanup(result_ttl, pipeline=pipeline,
+                            remove_from_queue=False)
+
+                pipeline.execute()
 
         except:
             # Use the public setter here, to immediately update Redis
