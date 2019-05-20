@@ -42,7 +42,12 @@ class WindowsWorker(rq.Worker):
         """
         self.log.info('Using rq_win.WindowsWorker (experimental)')
         self.default_worker_ttl=2
-        return super(WindowsWorker, self).work(burst)
+        return super(WindowsWorker, self).work(
+            burst=burst,
+            logging_level=logging_level,
+            date_format=date_format,
+            log_format=log_format,
+        )
 
 
     def execute_job(self, job, queue):
