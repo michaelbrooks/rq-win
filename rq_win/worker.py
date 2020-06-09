@@ -31,7 +31,7 @@ class WindowsWorker(rq.Worker):
         super(WindowsWorker, self).__init__(*args, **kwargs)
 
     def work(self, burst=False, logging_level="INFO", date_format=DEFAULT_LOGGING_DATE_FORMAT,
-             log_format=DEFAULT_LOGGING_FORMAT):
+             log_format=DEFAULT_LOGGING_FORMAT, max_jobs=None, with_scheduler=False):
         """Starts the work loop.
 
         Pops and performs all jobs on the current list of queues.  When all
@@ -47,6 +47,8 @@ class WindowsWorker(rq.Worker):
             logging_level=logging_level,
             date_format=date_format,
             log_format=log_format,
+            max_jobs=max_jobs,
+            with_scheduler=with_scheduler
         )
 
 
