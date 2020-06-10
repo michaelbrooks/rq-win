@@ -72,10 +72,12 @@ class WindowsWorker(rq.Worker):
 
         self._is_horse = False
 
-    def perform_job(self, job, queue):
+    def perform_job(self, job, queue, heartbeat_ttl=None):
         """Performs the actual work of a job.  Will/should only be called
         inside the work horse's process.
         """
+        self.prepare_job_execution(job, heartbeat_ttl)
+
         self.procline('Processing %s from %s since %s' % (
             job.func_name,
             job.origin, time.time()))
