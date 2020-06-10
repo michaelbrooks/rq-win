@@ -83,6 +83,8 @@ class WindowsWorker(rq.Worker):
             job.origin, time.time()))
 
         try:
+            job.started_at = times.now()
+
             # I have DISABLED the time limit!
             rv = job.perform()
 
