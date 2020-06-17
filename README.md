@@ -28,3 +28,7 @@ $ rqworker -w rq_win.WindowsWorker
 ```
 
 Contributions and improvements are welcome!
+
+## Requirements
+-----------
+* Version `rq` > 1.2.0

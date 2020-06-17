@@ -31,7 +31,7 @@ class WindowsWorker(rq.Worker):
         super(WindowsWorker, self).__init__(*args, **kwargs)
 
     def work(self, burst=False, logging_level="INFO", date_format=DEFAULT_LOGGING_DATE_FORMAT,
-             log_format=DEFAULT_LOGGING_FORMAT):
+             log_format=DEFAULT_LOGGING_FORMAT, max_jobs=None, with_scheduler=False):
         """Starts the work loop.
 
         Pops and performs all jobs on the current list of queues.  When all
@@ -47,6 +47,8 @@ class WindowsWorker(rq.Worker):
             logging_level=logging_level,
             date_format=date_format,
             log_format=log_format,
+            max_jobs=max_jobs,
+            with_scheduler=with_scheduler
         )
 
 
@@ -70,15 +72,19 @@ class WindowsWorker(rq.Worker):
 
         self._is_horse = False
 
-    def perform_job(self, job, queue):
+    def perform_job(self, job, queue, heartbeat_ttl=None):
         """Performs the actual work of a job.  Will/should only be called
         inside the work horse's process.
         """
+        self.prepare_job_execution(job, heartbeat_ttl)
+
         self.procline('Processing %s from %s since %s' % (
             job.func_name,
             job.origin, time.time()))
 
         try:
+            job.started_at = times.now()
+
             # I have DISABLED the time limit!
             rv = job.perform()
 
