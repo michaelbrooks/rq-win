@@ -26,6 +26,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         ],
     install_requires=[
-        "rq>=0.3.13", "times"
+        "rq>1.2.0", "times"
     ]
 )
