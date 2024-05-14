@@ -5,7 +5,6 @@ import random
 import times
 import rq
 import rq.job
-import rq.compat
 import rq.worker
 
 from rq.defaults import (DEFAULT_LOGGING_FORMAT, DEFAULT_LOGGING_DATE_FORMAT)
@@ -122,7 +121,7 @@ class WindowsWorker(rq.Worker):
         if rv is None:
             self.log.info('Job OK')
         else:
-            self.log.info('Job OK, result = %s' % (rq.worker.yellow(rq.compat.text_type(rv)),))
+            self.log.info('Job OK, result = %s' % (rq.worker.yellow(str(rv)),))
 
         if result_ttl == 0:
             self.log.info('Result discarded immediately.')
