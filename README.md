@@ -15,10 +15,10 @@ do not provide any of the work timeout controls that normal workers provide.
 Installation and Use
 -----------
 
-You can install this package directly from GitHub with pip:
+You can install the latest stable version from PyPI:
 
 ```bash
-$ pip install git+https://github.com/michaelbrooks/rq-win.git#egg=rq-win
+$ pip install rq-win==0.4.2
 ```
 
 To start an RQ worker using the WindowsWorker class:
