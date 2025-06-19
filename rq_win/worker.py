@@ -29,8 +29,16 @@ class WindowsWorker(rq.Worker):
             kwargs['default_worker_ttl'] = 2
         super(WindowsWorker, self).__init__(*args, **kwargs)
 
-    def work(self, burst=False, logging_level="INFO", date_format=DEFAULT_LOGGING_DATE_FORMAT,
-             log_format=DEFAULT_LOGGING_FORMAT, max_jobs=None, with_scheduler=False):
+    def work(self,
+             burst=False,
+             logging_level="INFO",
+             date_format=DEFAULT_LOGGING_DATE_FORMAT,
+             log_format=DEFAULT_LOGGING_FORMAT,
+             max_jobs=None,
+             with_scheduler=False,
+             max_idle_time=None,
+             dequeue_strategy='default',
+             ):
         """Starts the work loop.
 
         Pops and performs all jobs on the current list of queues.  When all
@@ -40,16 +48,17 @@ class WindowsWorker(rq.Worker):
         The return value indicates whether any jobs were processed.
         """
         self.log.info('Using rq_win.WindowsWorker (experimental)')
-        self.default_worker_ttl=2
+        self.default_worker_ttl = 2
         return super(WindowsWorker, self).work(
             burst=burst,
             logging_level=logging_level,
             date_format=date_format,
             log_format=log_format,
             max_jobs=max_jobs,
-            with_scheduler=with_scheduler
+            with_scheduler=with_scheduler,
+            max_idle_time=max_idle_time,
+            dequeue_strategy=dequeue_strategy,
         )
-
 
     def execute_job(self, job, queue):
         """Spawns a work horse to perform the actual work and passes it a job.
