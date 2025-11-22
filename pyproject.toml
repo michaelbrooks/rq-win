@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rq-win"
+version = "0.5.0"
+description = "RQ Worker class that works for development on Windows"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Michael Brooks", email = "mjbrooks@uw.edu"}
+]
+keywords = ["rq", "queue", "windows"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Topic :: Utilities",
+    "License :: OSI Approved :: MIT License",
+]
+requires-python = ">=3.7"
+dependencies = [
+    "rq>1.8.1",
+    "times",
+]
+
+[project.urls]
+Homepage = "https://github.com/michaelbrooks/rq-win"
+
+[tool.setuptools]
+packages = ["rq_win"]
