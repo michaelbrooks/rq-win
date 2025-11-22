@@ -18,7 +18,7 @@ Installation and Use
 You can install the latest stable version from PyPI:
 
 ```bash
-$ pip install rq-win==0.4.2
+$ pip install rq-win==0.5.0
 ```
 
 To start an RQ worker using the WindowsWorker class:
