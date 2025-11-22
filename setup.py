@@ -11,7 +11,7 @@ def read(fname):
 
 setup(
     name="rq-win",
-    version="0.4.2",
+    version="0.5.0",
     author="Michael Brooks",
     author_email="mjbrooks@uw.edu",
     description=("RQ Worker class that works for development on Windows"),
